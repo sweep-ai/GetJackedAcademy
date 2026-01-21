@@ -9,8 +9,6 @@ export const metadata: Metadata = {
   description: "Battle-tested protocols for peak performance",
   icons: {
     icon: "/GetJackedLogo.png",
-    shortcut: "/GetJackedLogo.png",
-    apple: "/GetJackedLogo.png",
   },
 };
 

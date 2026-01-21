@@ -81,7 +81,7 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
             onClick={onQuizClick}
             className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50"
           >
-            Find Your Protocol
+            Get A Free Protocol
           </button>
         </div>
       </div>

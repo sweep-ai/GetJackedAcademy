@@ -35,7 +35,7 @@ export default function Home() {
   }) => {
     // Store the data and redirect to lead magnet page
     const protocolSlug = getProtocolSlug(data.protocol);
-    window.location.href = `/lead-magnet/${protocolSlug}?name=${encodeURIComponent(data.fullName)}&email=${encodeURIComponent(data.email)}&phone=${encodeURIComponent(data.phone)}`;
+    window.location.href = `/lead-magnet/${protocolSlug}?name=${encodeURIComponent(data.fullName)}&email=${encodeURIComponent(data.email)}&phone=${encodeURIComponent(data.phone)}&qualification=${encodeURIComponent(data.qualification)}`;
   };
 
   return (

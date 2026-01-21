@@ -2,23 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, FormEvent } from "react";
+import Script from "next/script";
 
 export default function BookCallPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    // Here you would integrate with your calendar booking system
-    // For now, we'll just show a success message
-    alert("Thank you! We'll contact you shortly to schedule your call.");
-  };
-
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -45,9 +31,9 @@ export default function BookCallPage() {
 
       {/* Main Content */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300 mb-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300 mb-4">
               Book a Call with Jack
             </h1>
             <p className="text-gray-400 text-xl max-w-2xl mx-auto">
@@ -56,107 +42,20 @@ export default function BookCallPage() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-8 rounded-lg relative">
-            {/* Corner decorations */}
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-gray-600"></div>
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-gray-600"></div>
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gray-600"></div>
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gray-600"></div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm text-gray-300 mb-2"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  required
-                  value={formData.fullName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-black border-2 border-gray-800 rounded-sm text-white focus:outline-none focus:border-gray-600 transition-colors"
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm text-gray-300 mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-black border-2 border-gray-800 rounded-sm text-white focus:outline-none focus:border-gray-600 transition-colors"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm text-gray-300 mb-2"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  required
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-black border-2 border-gray-800 rounded-sm text-white focus:outline-none focus:border-gray-600 transition-colors"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm text-gray-300 mb-2"
-                >
-                  What would you like to discuss? (Optional)
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-black border-2 border-gray-800 rounded-sm text-white focus:outline-none focus:border-gray-600 transition-colors resize-none"
-                  placeholder="Tell us about your goals..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-lg uppercase tracking-wider rounded-sm hover:from-gray-800 hover:to-black transition-all duration-300"
-              >
-                Request Call
-              </button>
-            </form>
-
-            <p className="text-gray-500 text-sm mt-6 text-center">
-              We'll contact you within 24 hours to schedule your call.
-            </p>
-          </div>
+          {/* Calendly inline widget */}
+          <div 
+            className="calendly-inline-widget" 
+            data-url="https://calendly.com/mandevillefitness-kqti/45min"
+            style={{ minWidth: '320px', height: '700px', width: '100%' }}
+          ></div>
         </div>
       </section>
+
+      {/* Calendly script */}
+      <Script
+        src="https://assets.calendly.com/assets/external/widget.js"
+        strategy="lazyOnload"
+      />
     </main>
   );
 }
