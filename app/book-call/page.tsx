@@ -1,16 +1,50 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Script from "next/script";
 
+declare global {
+  interface Window {
+    Calendly: {
+      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
+    };
+  }
+}
+
 export default function BookCallPage() {
+  const calendlyRef = useRef<HTMLDivElement>(null);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [widgetInitialized, setWidgetInitialized] = useState(false);
+
+  useEffect(() => {
+    if (scriptLoaded && calendlyRef.current && !widgetInitialized) {
+      // Clear any existing content
+      if (calendlyRef.current) {
+        calendlyRef.current.innerHTML = '';
+      }
+
+      // Initialize Calendly widget
+      if (window.Calendly) {
+        window.Calendly.initInlineWidget({
+          url: 'https://calendly.com/mandevillefitness-kqti/45min',
+          parentElement: calendlyRef.current,
+        });
+        setWidgetInitialized(true);
+      }
+    }
+  }, [scriptLoaded, widgetInitialized]);
+
+  const handleScriptLoad = () => {
+    setScriptLoaded(true);
+  };
+
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="border-b-2 border-gray-800 py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Image
               src="/GetJackedLogo.png"
               alt="Get Jacked Academy Logo"
@@ -19,13 +53,13 @@ export default function BookCallPage() {
               className="object-contain"
             />
             <span className="text-2xl font-bold text-gray-300 hidden sm:inline">GET JACKED ACADEMY</span>
-          </Link>
-          <Link
+          </a>
+          <a
             href="/"
             className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
           >
             ← Back to Home
-          </Link>
+          </a>
         </div>
       </header>
 
@@ -44,8 +78,7 @@ export default function BookCallPage() {
 
           {/* Calendly inline widget */}
           <div 
-            className="calendly-inline-widget" 
-            data-url="https://calendly.com/mandevillefitness-kqti/45min"
+            ref={calendlyRef}
             style={{ minWidth: '320px', height: '700px', width: '100%' }}
           ></div>
         </div>
@@ -54,7 +87,8 @@ export default function BookCallPage() {
       {/* Calendly script */}
       <Script
         src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
+        onLoad={handleScriptLoad}
       />
     </main>
   );

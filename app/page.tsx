@@ -3,6 +3,7 @@
 import Hero from "@/components/Hero";
 import QuizSection from "@/components/QuizSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import ConnectionSection from "@/components/ConnectionSection";
 import BioSection from "@/components/BioSection";
 import FinalCTA from "@/components/FinalCTA";
 import BookACallSection from "@/components/BookACallSection";
@@ -48,6 +49,9 @@ export default function Home() {
         <QuizSection onComplete={handleQuizComplete} />
       </div>
       <TestimonialsSection />
+      <div id="connection-section">
+        <ConnectionSection />
+      </div>
       <div id="book-call-section">
         <BookACallSection />
       </div>

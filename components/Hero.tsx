@@ -15,30 +15,46 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
         <div className="absolute top-1/2 left-1/4 w-16 h-16 border border-gray-800"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-0">
         <div className="text-center mb-8">
           <div className="mb-6 flex flex-col items-center">
-            <div className="mb-4">
+            <div className="mb-4 sm:mb-6">
               <Image
                 src="/GetJackedLogo1.png"
                 alt="Get Jacked Academy"
-                width={200}
-                height={200}
-                className="object-contain mx-auto"
+                width={320}
+                height={320}
+                className="object-contain mx-auto w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px]"
                 priority
               />
             </div>
 
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent to-gray-600"></div>
-              <span className="text-3xl font-bold text-gray-400">ACADEMY</span>
-              <div className="h-px w-16 bg-gradient-to-l from-transparent to-gray-600"></div>
+            <div className="flex items-center justify-center gap-2 sm:gap-6 mb-3 px-2">
+              <div className="h-px w-8 sm:w-24 bg-gradient-to-r from-transparent to-gray-600"></div>
+              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-400 leading-tight">Battle-Tested. Results-Driven.</span>
+              <div className="h-px w-8 sm:w-24 bg-gradient-to-l from-transparent to-gray-600"></div>
             </div>
           </div>
         
-          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-            Battle-Tested Protocols forged in the fires of real-world results. No theory. No fluff. Only protocols that work.
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-6 sm:mb-8 px-2">
+            Protocols proven in the field. Refined through execution. Delivering results that speak for themselves.
           </p>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
+          <button
+            onClick={onBookCallClick}
+            className="w-full sm:w-auto min-h-[48px] px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-base sm:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation"
+          >
+            Book a Call
+          </button>
+          <button
+            onClick={onQuizClick}
+            className="w-full sm:w-auto min-h-[48px] px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-base sm:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation"
+          >
+            Get A Free Protocol
+          </button>
         </div>
 
         {/* VSL Section */}
@@ -67,22 +83,6 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
             <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-gray-600"></div>
             <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-gray-600"></div>
           </div>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
-          <button
-            onClick={onBookCallClick}
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50"
-          >
-            Book a Call
-          </button>
-          <button
-            onClick={onQuizClick}
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50"
-          >
-            Get A Free Protocol
-          </button>
         </div>
       </div>
     </section>

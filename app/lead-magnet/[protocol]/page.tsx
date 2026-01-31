@@ -1,10 +1,17 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Script from "next/script";
+
+declare global {
+  interface Window {
+    Calendly: {
+      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
+    };
+  }
+}
 
 const protocolData: Record<string, { 
   title: string; 
@@ -75,6 +82,31 @@ export default function LeadMagnetPage({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [qualification, setQualification] = useState("");
+  const calendlyRef = useRef<HTMLDivElement>(null);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [widgetInitialized, setWidgetInitialized] = useState(false);
+
+  useEffect(() => {
+    if (scriptLoaded && calendlyRef.current && !widgetInitialized) {
+      // Clear any existing content
+      if (calendlyRef.current) {
+        calendlyRef.current.innerHTML = '';
+      }
+
+      // Initialize Calendly widget
+      if (window.Calendly) {
+        window.Calendly.initInlineWidget({
+          url: 'https://calendly.com/mandevillefitness-kqti/45min',
+          parentElement: calendlyRef.current,
+        });
+        setWidgetInitialized(true);
+      }
+    }
+  }, [scriptLoaded, widgetInitialized]);
+
+  const handleScriptLoad = () => {
+    setScriptLoaded(true);
+  };
 
   useEffect(() => {
     const nameParam = searchParams.get("name");
@@ -141,41 +173,41 @@ export default function LeadMagnetPage({
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="border-b-2 border-gray-800 py-6 px-4 sm:px-6 lg:px-8">
+      <header className="border-b-2 border-gray-800 py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity touch-manipulation">
             <Image
               src="/GetJackedLogo.png"
               alt="Get Jacked Academy Logo"
-              width={40}
-              height={40}
-              className="object-contain"
+              width={80}
+              height={80}
+              className="object-contain w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20"
             />
-            <span className="text-2xl font-bold text-gray-300 hidden sm:inline">GET JACKED ACADEMY</span>
-          </Link>
-          <div className="text-sm text-gray-400">
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-gray-300 hidden sm:inline">GET JACKED ACADEMY</span>
+          </a>
+          <div className="text-xs sm:text-sm text-gray-400 px-2">
             Welcome, {name || "Warrior"}
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black via-gray-900 to-black">
+      <section className="pt-12 sm:pt-16 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="text-6xl mb-6">{protocol.icon}</div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300 mb-4">
+          <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">{protocol.icon}</div>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-300 mb-3 sm:mb-4 px-2 leading-tight">
             {name ? `${name}, here's your ${protocol.title}` : protocol.title}
           </h1>
-          <p className="text-xl text-gray-400 mb-6 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-4 sm:mb-6 max-w-2xl mx-auto px-2">
             {protocol.description}
           </p>
           {protocol.painPoints.length > 0 && (
-            <div className="text-left max-w-2xl mx-auto bg-gray-900/50 p-6 rounded-lg border border-gray-800">
-              <p className="text-gray-300 mb-3">
+            <div className="text-left max-w-2xl mx-auto bg-gray-900/50 p-4 sm:p-6 rounded-lg border border-gray-800">
+              <p className="text-gray-300 mb-2 sm:mb-3 text-sm sm:text-base">
                 <span className="font-bold text-gray-200">You're dealing with:</span> {protocol.painPoints[0]}
                 {protocol.painPoints.length > 1 && `, ${protocol.painPoints[1]}`}
               </p>
-              <p className="text-gray-300">
+              <p className="text-gray-300 text-sm sm:text-base">
                 <span className="font-bold text-gray-200">You want:</span> {protocol.benefits[0]}
                 {protocol.benefits.length > 1 && `, ${protocol.benefits[1]}`}
               </p>
@@ -185,55 +217,55 @@ export default function LeadMagnetPage({
       </section>
 
       {/* VSL Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-black">
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-300 mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
               Watch This First: Your Path to {protocol.title}
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
               This video reveals the exact framework that bridges the gap between where you are now and where you want to be.
             </p>
           </div>
 
-          <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl mb-8">
+          <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl mb-6 sm:mb-8">
             {/* Placeholder VSL */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-6 border-4 border-gray-600 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 border-4 border-gray-600 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-12 h-12 text-gray-600 ml-2"
+                    className="w-8 h-8 sm:w-12 sm:h-12 text-gray-600 ml-1 sm:ml-2"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
                     <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                   </svg>
                 </div>
-                <p className="text-gray-400 text-xl">
+                <p className="text-gray-400 text-base sm:text-lg md:text-xl">
                   {protocol.title} Video
                 </p>
-                <p className="text-gray-600 text-sm mt-2">
+                <p className="text-gray-600 text-xs sm:text-sm mt-2">
                   Placeholder - Replace with actual VSL
                 </p>
               </div>
             </div>
 
             {/* Decorative corner elements */}
-            <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-gray-600"></div>
-            <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-gray-600"></div>
-            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-gray-600"></div>
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-gray-600"></div>
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-l-2 border-gray-600"></div>
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-gray-600"></div>
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-gray-600"></div>
+            <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-r-2 border-gray-600"></div>
           </div>
 
           <div className="text-center">
-            <p className="text-gray-400 text-sm max-w-2xl mx-auto mb-6">
+            <p className="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto mb-4 sm:mb-6 px-2">
               After watching, review the protocol document below, then book your strategy call to personalize it to your exact situation.
             </p>
             <button
               onClick={() => {
                 document.getElementById("book-strategy-call")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="group relative px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50"
+              className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-sm sm:text-base md:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation min-h-[48px] sm:min-h-[56px]"
             >
               <span className="relative z-10">Book Your Free Strategy Call</span>
               <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -246,16 +278,16 @@ export default function LeadMagnetPage({
       </section>
 
       {/* Lead Magnet Document Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-300 mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
               Your {protocol.title} Guide
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-2">
-              This is the foundation—the battle-tested protocol that works.
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-2 px-2">
+              This is the foundation. A proven system that delivers.
             </p>
-            <p className="text-gray-500 text-base max-w-2xl mx-auto">
+            <p className="text-gray-500 text-xs sm:text-sm md:text-base max-w-2xl mx-auto px-2">
               <span className="font-bold text-gray-400">But here's the thing:</span> Generic protocols get generic results. 
               {peptideExperience && ` Based on your ${peptideExperience.toLowerCase()},`} 
               {peptideWillingness && ` and your ${peptideWillingness.toLowerCase()},`} 
@@ -263,47 +295,47 @@ export default function LeadMagnetPage({
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-8 rounded-lg relative mb-8">
+          <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-4 sm:p-6 md:p-8 rounded-lg relative mb-6 sm:mb-8">
             {/* Corner decorations */}
             <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-gray-600"></div>
             <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-gray-600"></div>
             <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gray-600"></div>
             <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gray-600"></div>
 
-            <div className="relative" style={{ minHeight: '600px' }}>
+            <div className="relative" style={{ minHeight: '400px' }}>
               <iframe
                 src={leadMagnetDocUrl}
                 className="w-full"
-                style={{ height: '600px', border: 'none' }}
+                style={{ height: '400px' }}
                 title="Lead Magnet Protocol Document"
                 allow="clipboard-read; clipboard-write"
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 loading="lazy"
               ></iframe>
             </div>
-            <div className="mt-4 text-center">
+            <div className="mt-3 sm:mt-4 text-center">
               <a
                 href="https://docs.google.com/document/d/1WdiH3z8SO4zlQHq_0mB_xjRTriVtGJWn6okUyXdSlrc/edit"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-300 text-sm transition-colors"
+                className="text-gray-400 hover:text-gray-300 text-xs sm:text-sm transition-colors touch-manipulation inline-block py-2"
               >
                 Open in new tab →
               </a>
             </div>
           </div>
 
-          <div className="bg-gray-900/50 p-6 rounded-lg border border-gray-800 text-center">
-            <p className="text-gray-300 text-lg mb-4">
+          <div className="bg-gray-900/50 p-4 sm:p-6 rounded-lg border border-gray-800 text-center">
+            <p className="text-gray-300 text-base sm:text-lg mb-3 sm:mb-4 px-2">
               <span className="font-bold text-gray-200">This protocol is powerful, but it's not personalized yet.</span>
             </p>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 text-sm sm:text-base mb-3 sm:mb-4 px-2">
               {healthInvestment && `You mentioned you're ${healthInvestment.toLowerCase()}.`} 
               {" "}To get from where you are right now to where you want to be, you need a strategy call. 
               We'll review your specific situation, your goals, your experience level, and customize this protocol 
               to fit YOUR exact needs.
             </p>
-            <p className="text-gray-300 font-bold">
+            <p className="text-gray-300 font-bold text-sm sm:text-base px-2">
               The bridge between this document and your results? That's what the strategy call is for.
             </p>
           </div>
@@ -311,20 +343,20 @@ export default function LeadMagnetPage({
       </section>
 
       {/* Book Strategy Call Section */}
-      <section id="book-strategy-call" className="py-16 px-4 sm:px-6 lg:px-8 bg-black">
+      <section id="book-strategy-call" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-300 mb-6">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-300 mb-4 sm:mb-6 px-2">
               Book Your Free Strategy Call
             </h2>
-            <p className="text-gray-400 text-xl mb-4 max-w-2xl mx-auto">
+            <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-4 max-w-2xl mx-auto px-2">
               Let's personalize this protocol to your exact circumstances
             </p>
-            <div className="space-y-3 text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+            <div className="space-y-3 text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-2">
               <p>
                 On this call, we'll discuss:
               </p>
-              <ul className="list-disc list-inside text-left space-y-2 max-w-xl mx-auto">
+              <ul className="list-disc list-inside text-left space-y-2 max-w-xl mx-auto text-sm sm:text-base">
                 <li>Your specific goals and current situation</li>
                 <li>How to adapt this protocol to your {peptideExperience ? peptideExperience.toLowerCase() : "experience level"}</li>
                 <li>Dosages, timing, and implementation tailored to you</li>
@@ -335,9 +367,9 @@ export default function LeadMagnetPage({
 
           {/* Calendly inline widget */}
           <div 
-            className="calendly-inline-widget" 
-            data-url="https://calendly.com/mandevillefitness-kqti/45min"
+            ref={calendlyRef}
             style={{ minWidth: '320px', height: '700px', width: '100%' }}
+            className="sm:h-[600px]"
           ></div>
         </div>
       </section>
@@ -345,14 +377,112 @@ export default function LeadMagnetPage({
       {/* Calendly script */}
       <Script
         src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
+        onLoad={handleScriptLoad}
       />
+
+      {/* Proof Building Section */}
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
+              Real Men. Real Results. Real Transformations.
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-4 sm:mb-6 px-2">
+              These aren't stock photos or empty promises. These are actual transformations from men who took action and got their lives back.
+            </p>
+            <p className="text-gray-300 text-base sm:text-lg md:text-xl font-bold max-w-2xl mx-auto px-2">
+              The only difference between them and you? They booked the call.
+            </p>
+          </div>
+
+          {/* Testimonial Gallery */}
+          <div className="flex justify-center mb-8 sm:mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-lg md:max-w-2xl">
+              <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
+                <Image
+                  src="/ChrisAfter.png"
+                  alt="Chris Transformation"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-bold text-sm">Chris</p>
+                    <p className="text-gray-300 text-xs">Dropped body fat effortlessly. Confidence restored.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
+                <Image
+                  src="/RichAfter.jpg"
+                  alt="Rich Transformation"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-bold text-sm">Rich</p>
+                    <p className="text-gray-300 text-xs">200 lbs to 185 lbs. Energy returned to his 20s.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
+                <Image
+                  src="/JackAfter.jpeg"
+                  alt="Jack Transformation"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-bold text-sm">Jack</p>
+                    <p className="text-gray-300 text-xs">International powerlifting champion.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Powerful CTA */}
+          <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg p-6 sm:p-8 md:p-12 text-center relative">
+            {/* Corner decorations */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-gray-600"></div>
+            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-gray-600"></div>
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gray-600"></div>
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gray-600"></div>
+
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
+              Your Transformation Starts With One Decision
+            </h3>
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 max-w-2xl mx-auto px-2">
+              Every man in those photos was once where you are right now. Stuck. Frustrated. Ready for change but not sure where to start.
+            </p>
+            <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto font-bold px-2">
+              They didn't wait for the perfect moment. They didn't wait until they felt ready. They booked the call. They took action. They got results.
+            </p>
+            <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
+              The protocol is in front of you. The proof is above you. The only thing standing between you and your transformation is clicking that button and booking your strategy call.
+            </p>
+            <button
+              onClick={() => {
+                document.getElementById("book-strategy-call")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group relative px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-sm sm:text-base md:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation min-h-[48px] sm:min-h-[56px]"
+            >
+              <span className="relative z-10">Book Your Strategy Call Now</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute inset-0 border-2 border-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-t-2 border-gray-800 py-8 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <Image
                 src="/GetJackedLogo.png"
                 alt="Get Jacked Academy Logo"
@@ -364,13 +494,13 @@ export default function LeadMagnetPage({
                 <p className="text-gray-300 font-bold">Get Jacked Academy</p>
                 <p className="text-gray-600 text-sm">Created by Jack Mandeville</p>
               </div>
-            </Link>
-            <Link
+            </a>
+            <a
               href="/"
               className="text-gray-500 hover:text-gray-400 transition-colors text-sm"
             >
               ← Back to Home
-            </Link>
+            </a>
           </div>
         </div>
       </footer>
