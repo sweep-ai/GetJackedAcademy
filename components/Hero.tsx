@@ -60,28 +60,21 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
         {/* VSL Section */}
         <div className="max-w-3xl mx-auto mb-8">
           <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
-            {/* Placeholder VSL */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 border-4 border-gray-600 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-8 h-8 text-gray-600 ml-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                  </svg>
-                </div>
-                <p className="text-gray-400 text-sm">Video Sales Letter</p>
-                <p className="text-gray-600 text-xs mt-1">Placeholder - Replace with actual VSL</p>
-              </div>
-            </div>
+            {/* YouTube Embed */}
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube.com/embed/VZ6oZ9VfS00?controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=1&loop=0"
+              title="Video Sales Letter"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              loading="lazy"
+            />
             
             {/* Decorative corner elements */}
-            <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-gray-600"></div>
-            <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-gray-600"></div>
-            <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-gray-600"></div>
-            <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-gray-600"></div>
+            <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-gray-600 pointer-events-none z-10"></div>
+            <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-gray-600 pointer-events-none z-10"></div>
+            <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-gray-600 pointer-events-none z-10"></div>
+            <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-gray-600 pointer-events-none z-10"></div>
           </div>
         </div>
       </div>

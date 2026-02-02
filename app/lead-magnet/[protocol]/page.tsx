@@ -167,8 +167,16 @@ export default function LeadMagnetPage({
   const peptideWillingness = qualParts[1] || "";
   const healthInvestment = qualParts[2] || "";
 
-  const leadMagnetDocUrl =
-    "https://docs.google.com/document/d/1WdiH3z8SO4zlQHq_0mB_xjRTriVtGJWn6okUyXdSlrc/preview";
+  // Map protocol slugs to their corresponding Google Docs document IDs
+  const protocolDocIds: Record<string, string> = {
+    "fat-loss-protocol": "1mjLTXodw3Awhi_CtI_-Uc0fg13SyQN6wCK_F5Al9MU0",
+    "muscle-growth-protocol": "1oKpQ8xGdgLYTpOsoETQcHbMWLIMEzaL14QRVX9FTMLQ",
+    "brain-function-protocol": "1DmIgO3a2OMMglbRJNjYIMI5RN5qgWbvCOkIv9lN2L9g",
+  };
+
+  // Get the document ID for the current protocol, fallback to a default if not found
+  const docId = protocolDocIds[params.protocol] || protocolDocIds["fat-loss-protocol"];
+  const leadMagnetDocUrl = `https://docs.google.com/document/d/${docId}/preview`;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -216,67 +224,6 @@ export default function LeadMagnetPage({
         </div>
       </section>
 
-      {/* VSL Section */}
-      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-black">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
-              Watch This First: Your Path to {protocol.title}
-            </h2>
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
-              This video reveals the exact framework that bridges the gap between where you are now and where you want to be.
-            </p>
-          </div>
-
-          <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl mb-6 sm:mb-8">
-            {/* Placeholder VSL */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 border-4 border-gray-600 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-8 h-8 sm:w-12 sm:h-12 text-gray-600 ml-1 sm:ml-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                  </svg>
-                </div>
-                <p className="text-gray-400 text-base sm:text-lg md:text-xl">
-                  {protocol.title} Video
-                </p>
-                <p className="text-gray-600 text-xs sm:text-sm mt-2">
-                  Placeholder - Replace with actual VSL
-                </p>
-              </div>
-            </div>
-
-            {/* Decorative corner elements */}
-            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-l-2 border-gray-600"></div>
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-gray-600"></div>
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-gray-600"></div>
-            <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-r-2 border-gray-600"></div>
-          </div>
-
-          <div className="text-center">
-            <p className="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto mb-4 sm:mb-6 px-2">
-              After watching, review the protocol document below, then book your strategy call to personalize it to your exact situation.
-            </p>
-            <button
-              onClick={() => {
-                document.getElementById("book-strategy-call")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-sm sm:text-base md:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation min-h-[48px] sm:min-h-[56px]"
-            >
-              <span className="relative z-10">Book Your Free Strategy Call</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              {/* Decorative border effect */}
-              <div className="absolute inset-0 border-2 border-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* Lead Magnet Document Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
         <div className="max-w-5xl mx-auto">
@@ -293,6 +240,22 @@ export default function LeadMagnetPage({
               {peptideWillingness && ` and your ${peptideWillingness.toLowerCase()},`} 
               {" "}this protocol needs to be tailored to YOUR specific circumstances, goals, and current situation.
             </p>
+          </div>
+
+          {/* Book a Call CTA Button */}
+          <div className="text-center mb-6 sm:mb-8">
+            <button
+              onClick={() => {
+                document.getElementById("book-strategy-call")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-sm sm:text-base md:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation min-h-[48px] sm:min-h-[56px]"
+            >
+              <span className="relative z-10">Book Your Free Strategy Call</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              {/* Decorative border effect */}
+              <div className="absolute inset-0 border-2 border-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
           </div>
 
           <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-4 sm:p-6 md:p-8 rounded-lg relative mb-6 sm:mb-8">
@@ -315,7 +278,7 @@ export default function LeadMagnetPage({
             </div>
             <div className="mt-3 sm:mt-4 text-center">
               <a
-                href="https://docs.google.com/document/d/1WdiH3z8SO4zlQHq_0mB_xjRTriVtGJWn6okUyXdSlrc/edit"
+                href={`https://docs.google.com/document/d/${docId}/edit`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-300 text-xs sm:text-sm transition-colors touch-manipulation inline-block py-2"
