@@ -45,9 +45,11 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
           <button
             onClick={onBookCallClick}
-            className="w-full sm:w-auto min-h-[48px] px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold text-base sm:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-2xl hover:shadow-gray-700/50 touch-manipulation"
+            className="group relative w-full sm:w-auto min-h-[56px] sm:min-h-[64px] px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-gray-600 via-gray-700 to-gray-800 text-white font-bold text-lg sm:text-xl uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-110 hover:shadow-2xl hover:shadow-gray-500/60 touch-manipulation border-2 border-gray-500 hover:border-gray-400"
           >
-            Book a Call
+            <span className="relative z-10">Book a Call</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </button>
           <button
             onClick={onQuizClick}
@@ -58,7 +60,7 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
         </div>
 
         {/* VSL Section */}
-        <div className="max-w-3xl mx-auto mb-8">
+        <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
           <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
             {/* YouTube Embed */}
             <iframe

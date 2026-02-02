@@ -159,7 +159,7 @@ export default function QuizSection({ onComplete }: QuizSectionProps) {
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black relative overflow-hidden">
+    <section className="pt-12 pb-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-black relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-0 w-96 h-96 border border-gray-800 rotate-45 -translate-x-1/2 -translate-y-1/2"></div>
