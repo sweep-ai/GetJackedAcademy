@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 interface HeroProps {
   onBookCallClick: () => void;
@@ -6,6 +9,14 @@ interface HeroProps {
 }
 
 export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
+  const [isMuted, setIsMuted] = useState(false); // Start with unmuted autoplay attempt
+  const videoId = "VZ6oZ9VfS00";
+  
+  // Try unmuted autoplay first - if browser blocks it, YouTube will handle gracefully
+  // User can still use unmute button if needed
+  const videoSrc = isMuted 
+    ? `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=1&loop=0`
+    : `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=0&loop=0`;
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
       {/* Background decorative elements */}
@@ -64,13 +75,38 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
           <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
             {/* YouTube Embed */}
             <iframe
+              key={isMuted ? "muted" : "unmuted"}
               className="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/VZ6oZ9VfS00?controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=1&loop=0"
+              src={videoSrc}
               title="Video Sales Letter"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               loading="lazy"
             />
+            
+            {/* Unmute Button - Show if video is muted (fallback if browser blocks unmuted autoplay) */}
+            {isMuted && (
+              <button
+                onClick={() => setIsMuted(false)}
+                className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-20 flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-black/80 hover:bg-black/90 border-2 border-gray-600 hover:border-gray-400 text-white font-bold text-sm sm:text-base uppercase tracking-wider rounded-sm transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                aria-label="Unmute video"
+              >
+                <svg
+                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M6.343 6.343l13.314 13.314M3 3l3.586 3.586m0 0L12 12m-5.414-5.414L6.343 6.343M12 12l-3.586 3.586m0 0L3 21m5.414-5.414L12 12m0 0l3.586-3.586M12 12l3.586 3.586"
+                  />
+                </svg>
+                <span>Unmute</span>
+              </button>
+            )}
             
             {/* Decorative corner elements */}
             <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-gray-600 pointer-events-none z-10"></div>

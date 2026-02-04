@@ -47,24 +47,21 @@ export default function QuizSection({ onComplete }: QuizSectionProps) {
   ];
 
   const peptideExperienceOptions = [
+    "I'm an expert",
+    "I have some experience",
     "I've never used peptides before",
-    "I have some experience with peptides",
-    "I'm experienced with peptides",
-    "I'm an expert with peptides",
   ];
 
   const peptideWillingnessOptions = [
-    "I'm very interested and ready to start",
+    "I'm not interested",
     "I'm interested but want to learn more",
-    "I'm not sure yet",
-    "I'm not interested in peptides",
+    "I'm very interested and ready to start",
   ];
 
   const healthInvestmentOptions = [
-    "I'm fully committed to investing in my health",
-    "I'm willing to invest significantly",
-    "I'm open to making it a priority",
     "I don't care to invest in my health",
+    "I'm open to invest significantly",
+    "I'm fully committed to investing in my health",
   ];
 
   const transitionToStep = (newStep: number) => {
