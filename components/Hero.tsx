@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface HeroProps {
   onBookCallClick: () => void;
@@ -9,14 +9,45 @@ interface HeroProps {
 }
 
 export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
-  const [isMuted, setIsMuted] = useState(false); // Start with unmuted autoplay attempt
+  const [isMuted, setIsMuted] = useState(true); // Start muted for autoplay compatibility
+  const [showUnmuteButton, setShowUnmuteButton] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const videoId = "VZ6oZ9VfS00";
   
-  // Try unmuted autoplay first - if browser blocks it, YouTube will handle gracefully
-  // User can still use unmute button if needed
-  const videoSrc = isMuted 
-    ? `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=1&loop=0`
-    : `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=0&loop=0`;
+  // Start with muted autoplay (most reliable across browsers)
+  const videoSrc = `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=1&loop=0&enablejsapi=1`;
+  
+  // Attempt to unmute after a short delay if user has interacted with page
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      // After user interaction, try to unmute
+      setTimeout(() => {
+        if (iframeRef.current && !isMuted) {
+          // Try to send unmute command via postMessage
+          iframeRef.current.contentWindow?.postMessage(
+            JSON.stringify({
+              event: 'command',
+              func: 'unMute',
+              args: []
+            }),
+            'https://www.youtube.com'
+          );
+        }
+      }, 1000);
+    };
+
+    // Listen for any user interaction
+    const events = ['click', 'touchstart', 'keydown'];
+    events.forEach(event => {
+      document.addEventListener(event, handleUserInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+    };
+  }, [isMuted]);
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
       {/* Background decorative elements */}
@@ -75,7 +106,8 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
           <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
             {/* YouTube Embed */}
             <iframe
-              key={isMuted ? "muted" : "unmuted"}
+              ref={iframeRef}
+              key="video-embed"
               className="absolute inset-0 w-full h-full"
               src={videoSrc}
               title="Video Sales Letter"
@@ -84,10 +116,17 @@ export default function Hero({ onBookCallClick, onQuizClick }: HeroProps) {
               loading="lazy"
             />
             
-            {/* Unmute Button - Show if video is muted (fallback if browser blocks unmuted autoplay) */}
-            {isMuted && (
+            {/* Unmute Button - Show if video is muted */}
+            {showUnmuteButton && isMuted && (
               <button
-                onClick={() => setIsMuted(false)}
+                onClick={() => {
+                  setIsMuted(false);
+                  setShowUnmuteButton(false);
+                  // Reload iframe with unmuted version
+                  if (iframeRef.current) {
+                    iframeRef.current.src = `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&autoplay=1&mute=0&loop=0&enablejsapi=1`;
+                  }
+                }}
                 className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-20 flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-black/80 hover:bg-black/90 border-2 border-gray-600 hover:border-gray-400 text-white font-bold text-sm sm:text-base uppercase tracking-wider rounded-sm transition-all duration-300 hover:scale-105 backdrop-blur-sm"
                 aria-label="Unmute video"
               >
