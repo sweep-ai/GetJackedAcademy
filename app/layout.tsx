@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -23,6 +24,12 @@ export default function RootLayout({
         className={`${inter.variable} antialiased`}
       >
         {children}
+        {/* Load Calendly script once globally */}
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="lazyOnload"
+          id="calendly-script"
+        />
       </body>
     </html>
   );

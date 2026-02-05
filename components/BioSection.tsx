@@ -30,7 +30,7 @@ export default function BioSection() {
             </h2>
             <div className="space-y-3 sm:space-y-4 text-gray-300 leading-relaxed">
               <p className="text-sm sm:text-base">
-                I wasn't always disciplined or high-performing. I was the overweight gamer kid with no energy, confidence, or direction, until I flipped a switch and lost over <strong className="text-gray-200">50 pounds of fat</strong> through extreme discipline and relentless work ethic. Just as my life began to change, I was diagnosed at 16 with hypogonadism—critically low testosterone—while doctors dismissed my symptoms and offered no real solutions.
+                I wasn't always disciplined or high-performing. I was the overweight gamer kid with no energy, confidence, or direction, until I flipped a switch and lost over <strong className="text-gray-200">50 pounds of fat</strong> through extreme discipline and relentless work ethic. Just as my life began to change, I was diagnosed at 16 with hypogonadism, critically low testosterone, while doctors dismissed my symptoms and offered no real solutions.
               </p>
               <p className="text-sm sm:text-base">
                 Instead of accepting that, I took control. I educated myself on training, nutrition, hormones, TRT, peptides, and performance science, and rebuilt my body from the inside out. The result wasn't just fat loss. It was a full transformation in energy, recovery, confidence, and drive.

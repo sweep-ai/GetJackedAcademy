@@ -1,43 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Script from "next/script";
-
-declare global {
-  interface Window {
-    Calendly: {
-      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
-    };
-  }
-}
-
-export default function BookCallPage() {
-  const calendlyRef = useRef<HTMLDivElement>(null);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [widgetInitialized, setWidgetInitialized] = useState(false);
-
-  useEffect(() => {
-    if (scriptLoaded && calendlyRef.current && !widgetInitialized) {
-      // Clear any existing content
-      if (calendlyRef.current) {
-        calendlyRef.current.innerHTML = '';
-      }
-
-      // Initialize Calendly widget
-      if (window.Calendly) {
-        window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/mandevillefitness-kqti/45min',
-          parentElement: calendlyRef.current,
-        });
-        setWidgetInitialized(true);
-      }
-    }
-  }, [scriptLoaded, widgetInitialized]);
-
-  const handleScriptLoad = () => {
-    setScriptLoaded(true);
-  };
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -78,18 +41,12 @@ export default function BookCallPage() {
 
           {/* Calendly inline widget */}
           <div 
-            ref={calendlyRef}
+            className="calendly-inline-widget" 
+            data-url="https://calendly.com/mandevillefitness-kqti/15min"
             style={{ minWidth: '320px', height: '700px', width: '100%' }}
           ></div>
         </div>
       </section>
-
-      {/* Calendly script */}
-      <Script
-        src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="afterInteractive"
-        onLoad={handleScriptLoad}
-      />
     </main>
   );
 }

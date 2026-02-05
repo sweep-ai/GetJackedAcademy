@@ -1,44 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Script from "next/script";
 import ScrollButton from "./ScrollButton";
 
-declare global {
-  interface Window {
-    Calendly: {
-      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
-    };
-  }
-}
-
 export default function BookACallSection() {
-  const calendlyRef = useRef<HTMLDivElement>(null);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [widgetInitialized, setWidgetInitialized] = useState(false);
-
-  useEffect(() => {
-    if (scriptLoaded && calendlyRef.current && !widgetInitialized) {
-      // Clear any existing content
-      if (calendlyRef.current) {
-        calendlyRef.current.innerHTML = '';
-      }
-
-      // Initialize Calendly widget
-      if (window.Calendly) {
-        window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/mandevillefitness-kqti/45min?hide_event_type_details=1',
-          parentElement: calendlyRef.current,
-        });
-        setWidgetInitialized(true);
-      }
-    }
-  }, [scriptLoaded, widgetInitialized]);
-
-  const handleScriptLoad = () => {
-    setScriptLoaded(true);
-  };
 
   return (
     <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-black">
@@ -62,9 +27,9 @@ export default function BookACallSection() {
         
         {/* Calendly inline widget */}
         <div 
-          ref={calendlyRef}
-          style={{ minWidth: '320px', height: '600px', width: '100%' }}
-          className="sm:h-[500px]"
+          className="calendly-inline-widget" 
+          data-url="https://calendly.com/mandevillefitness-kqti/15min"
+          style={{ minWidth: '320px', height: '700px', width: '100%' }}
         ></div>
         
         {/* Alternative CTA */}
@@ -73,13 +38,6 @@ export default function BookACallSection() {
           <ScrollButton targetId="quiz-section" copy="Get Free Protocol" variant="secondary" showArrow={false} />
         </div>
       </div>
-
-      {/* Calendly script */}
-      <Script
-        src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="afterInteractive"
-        onLoad={handleScriptLoad}
-      />
     </section>
   );
 }

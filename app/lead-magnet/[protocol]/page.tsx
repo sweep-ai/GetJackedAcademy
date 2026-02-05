@@ -1,17 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Script from "next/script";
-
-declare global {
-  interface Window {
-    Calendly: {
-      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
-    };
-  }
-}
 
 const protocolData: Record<string, { 
   title: string; 
@@ -82,31 +73,6 @@ export default function LeadMagnetPage({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [qualification, setQualification] = useState("");
-  const calendlyRef = useRef<HTMLDivElement>(null);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [widgetInitialized, setWidgetInitialized] = useState(false);
-
-  useEffect(() => {
-    if (scriptLoaded && calendlyRef.current && !widgetInitialized) {
-      // Clear any existing content
-      if (calendlyRef.current) {
-        calendlyRef.current.innerHTML = '';
-      }
-
-      // Initialize Calendly widget
-      if (window.Calendly) {
-        window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/mandevillefitness-kqti/45min',
-          parentElement: calendlyRef.current,
-        });
-        setWidgetInitialized(true);
-      }
-    }
-  }, [scriptLoaded, widgetInitialized]);
-
-  const handleScriptLoad = () => {
-    setScriptLoaded(true);
-  };
 
   useEffect(() => {
     const nameParam = searchParams.get("name");
@@ -330,19 +296,12 @@ export default function LeadMagnetPage({
 
           {/* Calendly inline widget */}
           <div 
-            ref={calendlyRef}
+            className="calendly-inline-widget" 
+            data-url="https://calendly.com/mandevillefitness-kqti/15min"
             style={{ minWidth: '320px', height: '700px', width: '100%' }}
-            className="sm:h-[600px]"
           ></div>
         </div>
       </section>
-
-      {/* Calendly script */}
-      <Script
-        src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="afterInteractive"
-        onLoad={handleScriptLoad}
-      />
 
       {/* Proof Building Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
@@ -364,20 +323,6 @@ export default function LeadMagnetPage({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-lg md:max-w-2xl">
               <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
                 <Image
-                  src="/ChrisAfter.png"
-                  alt="Chris Transformation"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <p className="text-white font-bold text-sm">Chris</p>
-                    <p className="text-gray-300 text-xs">Dropped body fat effortlessly. Confidence restored.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
-                <Image
                   src="/RichAfter.jpg"
                   alt="Rich Transformation"
                   fill
@@ -387,6 +332,20 @@ export default function LeadMagnetPage({
                   <div className="absolute bottom-4 left-4 right-4">
                     <p className="text-white font-bold text-sm">Rich</p>
                     <p className="text-gray-300 text-xs">200 lbs to 185 lbs. Energy returned to his 20s.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden group cursor-pointer hover:border-gray-600 transition-all w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] mx-auto">
+                <Image
+                  src="/ChrisAfter.png"
+                  alt="Chris Transformation"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-bold text-sm">Chris</p>
+                    <p className="text-gray-300 text-xs">Dropped body fat effortlessly. Confidence restored.</p>
                   </div>
                 </div>
               </div>

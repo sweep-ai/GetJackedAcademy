@@ -21,47 +21,6 @@ export default function TestimonialsSection() {
         {/* Transformations */}
         <div className="mt-8 sm:mt-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Chris */}
-            <div>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden">
-                  <Image
-                    src="/ChrisBefore.png"
-                    alt="Chris Before"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-xs font-bold text-gray-300">
-                    BEFORE
-                  </div>
-                </div>
-                <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden">
-                  <Image
-                    src="/ChrisAfter.png"
-                    alt="Chris After"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-xs font-bold text-gray-300">
-                    AFTER
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-4 sm:p-6 rounded-lg relative">
-                {/* Corner decorations */}
-                <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-gray-600"></div>
-                <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-gray-600"></div>
-                <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gray-600"></div>
-                <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gray-600"></div>
-                <p className="text-gray-300 mb-4 italic leading-relaxed text-sm sm:text-base">
-                  "Chris had zero energy, no drive to train, and felt disconnected from the man in the mirror. After rebuilding his peptide protocol and aligning everything, he now wakes up energized, drops body fat effortlessly, and his confidence is obvious the moment he walks into a room. The transformation wasn't just physical. It reset how he shows up."
-                </p>
-                <div className="border-t border-gray-800 pt-4">
-                  <p className="text-gray-400 font-bold text-sm sm:text-base">Chris</p>
-                </div>
-              </div>
-            </div>
-
             {/* Rich */}
             <div>
               <div className="grid grid-cols-2 gap-3 mb-4">
@@ -99,6 +58,47 @@ export default function TestimonialsSection() {
                 </p>
                 <div className="border-t border-gray-800 pt-4">
                   <p className="text-gray-400 font-bold text-sm sm:text-base">Rich</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Chris */}
+            <div>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden">
+                  <Image
+                    src="/ChrisBefore.png"
+                    alt="Chris Before"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-xs font-bold text-gray-300">
+                    BEFORE
+                  </div>
+                </div>
+                <div className="relative aspect-[3/4] border-2 border-gray-700 rounded-lg overflow-hidden">
+                  <Image
+                    src="/ChrisAfter.png"
+                    alt="Chris After"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-2 left-2 bg-black/80 px-2 py-1 rounded text-xs font-bold text-gray-300">
+                    AFTER
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 p-4 sm:p-6 rounded-lg relative">
+                {/* Corner decorations */}
+                <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-gray-600"></div>
+                <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-gray-600"></div>
+                <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gray-600"></div>
+                <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gray-600"></div>
+                <p className="text-gray-300 mb-4 italic leading-relaxed text-sm sm:text-base">
+                  "Chris had zero energy, no drive to train, and felt disconnected from the man in the mirror. After rebuilding his peptide protocol and aligning everything, he now wakes up energized, drops body fat effortlessly, and his confidence is obvious the moment he walks into a room. The transformation wasn't just physical. It reset how he shows up."
+                </p>
+                <div className="border-t border-gray-800 pt-4">
+                  <p className="text-gray-400 font-bold text-sm sm:text-base">Chris</p>
                 </div>
               </div>
             </div>
