@@ -27,7 +27,7 @@ export default function RootLayout({
         {/* Load Calendly script once globally */}
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           id="calendly-script"
         />
       </body>

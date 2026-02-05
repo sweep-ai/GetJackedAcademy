@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+export default function BookCallPage() {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header */}
