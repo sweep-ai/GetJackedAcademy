@@ -10,9 +10,10 @@ interface QuizSectionProps {
     email: string;
     phone: string;
   }) => void;
+  onBookCallClick?: () => void;
 }
 
-export default function QuizSection({ onComplete }: QuizSectionProps) {
+export default function QuizSection({ onComplete, onBookCallClick }: QuizSectionProps) {
   const [step, setStep] = useState(1);
   const [selectedProtocol, setSelectedProtocol] = useState<string>("");
   const [peptideExperience, setPeptideExperience] = useState<string>("");
@@ -450,6 +451,25 @@ export default function QuizSection({ onComplete }: QuizSectionProps) {
             </form>
           </div>
         )}
+        </div>
+
+        {/* Subtle CTA below quiz */}
+        <div className="mt-8 sm:mt-12 text-center">
+          <p className="text-gray-500 text-sm sm:text-base">
+            Ready to start today?{" "}
+            <button
+              onClick={() => {
+                if (onBookCallClick) {
+                  onBookCallClick();
+                } else {
+                  document.getElementById("book-call-section")?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="text-gray-300 hover:text-white underline underline-offset-2 transition-colors"
+            >
+              Book a free peptide strategy call
+            </button>
+          </p>
         </div>
       </div>
     </section>

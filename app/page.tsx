@@ -10,12 +10,12 @@ import BookACallSection from "@/components/BookACallSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const handleBookCallClick = () => {
-    document.getElementById("book-call-section")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const handleQuizClick = () => {
     document.getElementById("quiz-section")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleBookCallClick = () => {
+    document.getElementById("book-call-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getProtocolSlug = (protocol: string): string => {
@@ -42,11 +42,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
       <Hero 
-        onBookCallClick={handleBookCallClick}
         onQuizClick={handleQuizClick}
       />
       <div id="quiz-section">
-        <QuizSection onComplete={handleQuizComplete} />
+        <QuizSection onComplete={handleQuizComplete} onBookCallClick={handleBookCallClick} />
       </div>
       <TestimonialsSection />
       <div id="connection-section">
