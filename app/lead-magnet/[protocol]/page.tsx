@@ -133,16 +133,15 @@ export default function LeadMagnetPage({
   const peptideWillingness = qualParts[1] || "";
   const healthInvestment = qualParts[2] || "";
 
-  // Map protocol slugs to their corresponding Google Docs document IDs
-  const protocolDocIds: Record<string, string> = {
-    "fat-loss-protocol": "1mjLTXodw3Awhi_CtI_-Uc0fg13SyQN6wCK_F5Al9MU0",
-    "muscle-growth-protocol": "1oKpQ8xGdgLYTpOsoETQcHbMWLIMEzaL14QRVX9FTMLQ",
-    "brain-function-protocol": "1DmIgO3a2OMMglbRJNjYIMI5RN5qgWbvCOkIv9lN2L9g",
+  // Map protocol slugs to Google Drive PDF file IDs (AGELESS, BUILD, SHRED)
+  const protocolFileIds: Record<string, string> = {
+    "fat-loss-protocol": "1Ymuhhsc_rxRPhz-43noWRO4wJi35MJg2",       // SHRED - Fat Loss and Muscle Retention
+    "muscle-growth-protocol": "1ytm1R6iRBV-GrYsE3TBQIbNaxVqVrVxq",   // BUILD - Muscle Growth and Recovery
+    "brain-function-protocol": "1cjUj17oCIzP8WHMlbuQ-3n0yqLB6rfRK",  // AGELESS - Longevity and Vitality
   };
 
-  // Get the document ID for the current protocol, fallback to a default if not found
-  const docId = protocolDocIds[params.protocol] || protocolDocIds["fat-loss-protocol"];
-  const leadMagnetDocUrl = `https://docs.google.com/document/d/${docId}/preview`;
+  const fileId = protocolFileIds[params.protocol] || protocolFileIds["fat-loss-protocol"];
+  const leadMagnetDocUrl = `https://drive.google.com/file/d/${fileId}/preview`;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -168,25 +167,7 @@ export default function LeadMagnetPage({
       {/* Hero Section */}
       <section className="pt-12 sm:pt-16 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">{protocol.icon}</div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-300 mb-3 sm:mb-4 px-2 leading-tight">
-            {name ? `${name}, here's your ${protocol.title}` : protocol.title}
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-4 sm:mb-6 max-w-2xl mx-auto px-2">
-            {protocol.description}
-          </p>
-          {protocol.painPoints.length > 0 && (
-            <div className="text-left max-w-2xl mx-auto bg-gray-900/50 p-4 sm:p-6 rounded-lg border border-gray-800">
-              <p className="text-gray-300 mb-2 sm:mb-3 text-sm sm:text-base">
-                <span className="font-bold text-gray-200">You're dealing with:</span> {protocol.painPoints[0]}
-                {protocol.painPoints.length > 1 && `, ${protocol.painPoints[1]}`}
-              </p>
-              <p className="text-gray-300 text-sm sm:text-base">
-                <span className="font-bold text-gray-200">You want:</span> {protocol.benefits[0]}
-                {protocol.benefits.length > 1 && `, ${protocol.benefits[1]}`}
-              </p>
-            </div>
-          )}
+          
         </div>
       </section>
 
@@ -194,18 +175,15 @@ export default function LeadMagnetPage({
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-black to-gray-900">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-6 sm:mb-8">
+            <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">{protocol.icon}</div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 mb-3 sm:mb-4 px-2">
               Your {protocol.title} Guide
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-2 px-2">
-              This is the foundation. A proven system that delivers.
-            </p>
-            <p className="text-gray-500 text-xs sm:text-sm md:text-base max-w-2xl mx-auto px-2">
-              <span className="font-bold text-gray-400">But here's the thing:</span> Generic protocols get generic results. 
-              {peptideExperience && ` Based on your ${peptideExperience.toLowerCase()},`} 
-              {peptideWillingness && ` and your ${peptideWillingness.toLowerCase()},`} 
-              {" "}this protocol needs to be tailored to YOUR specific circumstances, goals, and current situation.
-            </p>
+            {protocol.painPoints.length > 0 && protocol.benefits.length > 0 && (
+              <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
+                You're dealing with {protocol.painPoints[0].toLowerCase()}. You want {protocol.benefits[0].toLowerCase()}.
+              </p>
+            )}
           </div>
 
           {/* Book a Call CTA Button */}
@@ -236,7 +214,7 @@ export default function LeadMagnetPage({
                 src={leadMagnetDocUrl}
                 className="w-full"
                 style={{ height: '400px' }}
-                title="Lead Magnet Protocol Document"
+                title="Lead Magnet Protocol PDF"
                 allow="clipboard-read; clipboard-write"
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 loading="lazy"
@@ -244,7 +222,7 @@ export default function LeadMagnetPage({
             </div>
             <div className="mt-3 sm:mt-4 text-center">
               <a
-                href={`https://docs.google.com/document/d/${docId}/edit`}
+                href={`https://drive.google.com/file/d/${fileId}/view?usp=drive_link`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-300 text-xs sm:text-sm transition-colors touch-manipulation inline-block py-2"

@@ -48,7 +48,7 @@ export default function Hero({ onQuizClick }: HeroProps) {
     };
   }, [isMuted]);
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
+    <section className="relative min-h-screen min-h-[100dvh] flex flex-col justify-start bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 border-2 border-gray-600 rotate-45"></div>
@@ -56,37 +56,38 @@ export default function Hero({ onQuizClick }: HeroProps) {
         <div className="absolute top-1/2 left-1/4 w-16 h-16 border border-gray-800"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-0">
-        <div className="text-center mb-8">
-          <div className="mb-6 flex flex-col items-center">
-            <div className="mb-4 sm:mb-6">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col flex-1 min-h-0 py-5 sm:py-3 md:py-1">
+        {/* Compact header - more spacing on mobile */}
+        <div className="text-center flex-shrink-0 mb-4 sm:mb-2 md:mb-0">
+          <div className="flex flex-col items-center">
+            <div className="mb-3 sm:mb-2 md:mb-0">
               <Image
                 src="/GetJackedLogo1.png"
                 alt="Get Jacked Academy"
                 width={320}
                 height={320}
-                className="object-contain mx-auto w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px]"
+                className="object-contain mx-auto w-[200px] h-[200px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] lg:w-[320px] lg:h-[320px]"
                 priority
               />
             </div>
 
-            <div className="flex items-center justify-center gap-2 sm:gap-6 mb-3 px-2">
-              <div className="h-px w-8 sm:w-24 bg-gradient-to-r from-transparent to-gray-600"></div>
-              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-400 leading-tight">Battle-Tested. Results-Driven.</span>
-              <div className="h-px w-8 sm:w-24 bg-gradient-to-l from-transparent to-gray-600"></div>
+            <div className="flex items-center justify-center gap-1 sm:gap-4 mb-2 sm:mb-0 px-2">
+              <div className="h-px w-6 sm:w-16 bg-gradient-to-r from-transparent to-gray-600"></div>
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-400 leading-tight">Battle-Tested. Results-Driven.</span>
+              <div className="h-px w-6 sm:w-16 bg-gradient-to-l from-transparent to-gray-600"></div>
             </div>
           </div>
         
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-6 sm:mb-8 px-2">
-            Protocols proven in the field. Refined through execution. Delivering results that speak for themselves.
+          <p className="text-xs sm:text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-4 sm:mb-2 md:mb-1 px-2">
+            Protocols proven in the field. Refined through execution.
           </p>
         </div>
 
         {/* CTA Button */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4 flex-shrink-0">
           <button
             onClick={onQuizClick}
-            className="group relative w-full sm:w-auto min-h-[64px] sm:min-h-[72px] px-10 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-gray-500 via-gray-600 to-gray-700 text-white font-bold text-lg sm:text-xl md:text-2xl uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-110 hover:shadow-2xl hover:shadow-gray-400/60 touch-manipulation border-2 border-gray-400 hover:border-gray-300"
+            className="group relative w-full sm:w-auto min-h-[40px] sm:min-h-[48px] px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-gray-500 via-gray-600 to-gray-700 text-white font-bold text-sm sm:text-base md:text-lg uppercase tracking-wider rounded-sm overflow-hidden transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-xl hover:shadow-gray-400/50 touch-manipulation border-2 border-gray-400 hover:border-gray-300"
           >
             <span className="relative z-10">Get A Free Protocol</span>
             <div className="absolute inset-0 bg-gradient-to-r from-gray-400 to-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -96,9 +97,9 @@ export default function Hero({ onQuizClick }: HeroProps) {
           </button>
         </div>
 
-        {/* VSL Section */}
-        <div className="max-w-3xl mx-auto mb-4 sm:mb-8">
-          <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
+        {/* VSL Section - explicit size so video is always visible */}
+        <div className="max-w-2xl mx-auto w-full flex-shrink-0 mb-4 sm:mb-4">
+          <div className="relative w-full aspect-video min-h-[160px] sm:min-h-[220px] bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800 rounded-lg overflow-hidden shadow-2xl">
             {/* YouTube Embed */}
             <iframe
               ref={iframeRef}
