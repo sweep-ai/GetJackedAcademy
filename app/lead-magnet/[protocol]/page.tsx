@@ -275,7 +275,7 @@ export default function LeadMagnetPage({
           {/* Calendly inline widget */}
           <div 
             className="calendly-inline-widget" 
-            data-url="https://calendly.com/mandevillefitness-kqti/15min"
+            data-url="https://calendly.com/mandevillefitness-kqti/enhanced-optimization-strategy-call-clone"
             style={{ minWidth: '320px', height: '700px', width: '100%' }}
           ></div>
         </div>
