@@ -99,9 +99,9 @@ The route does not validate or transform the body; it is a transparent proxy. Va
 - **Deployment:** Deploy as “Web app”, execute as “Me”, “Anyone” can access (so your server can call it without Google login).
 - **Entry point:** `doPost(e)`.
   - `e.postData.contents` is the raw POST body (string). The script parses it as JSON.
-  - From that object it reads: `name`, `email`, `phone`, `painPoint`, `experience`, `peptideWillingness`, `investment` (with fallbacks to `''`).
+  - From that object it reads: `name`, `email`, `phone`, `phoneCountryCode`, `painPoint`, `experience`, `peptideWillingness`, `investment` (with fallbacks to `''`).
   - It gets the active sheet: `SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()`.
-  - It appends one row: `sheet.appendRow([name, email, phone, painPoint, experience, peptideWillingness, investment])`.
+  - It appends one row: `sheet.appendRow([name, email, phone, phoneCountryCode, painPoint, experience, peptideWillingness, investment])`.
   - It returns a JSON text output with `{ success: true }` or an error object, and `ContentService.createTextOutput(...).setMimeType(ContentService.MimeType.JSON)`.
 
 **Important:** The sheet that receives data is the one that was open in the editor when the script is “run” in the sense of the Web app deployment. So the script is tied to that spreadsheet (and its active sheet at deploy time). If you use “active spreadsheet” at request time, it’s the spreadsheet that owns the Web app project.
@@ -123,7 +123,8 @@ The route does not validate or transform the body; it is a transparent proxy. Va
 |----------------------|-----------------------|-----------------------------------------------|
 | name                 | `name`                | `formData.fullName`                           |
 | email                | `email`               | `formData.email`                              |
-| phone number         | `phone`               | `formData.phone`                               |
+| phone number         | `phone`               | Validated, E.164 (e.g. +15551234567)          |
+| phone country code   | `phoneCountryCode`    | Country calling code (e.g. +1, +44)           |
 | pain point           | `painPoint`           | Derived from `selectedProtocol` (see below)   |
 | experience           | `experience`          | `peptideExperience`                           |
 | peptide willingness  | `peptideWillingness`  | `peptideWillingness`                          |
@@ -160,9 +161,10 @@ The route does not validate or transform the body; it is a transparent proxy. Va
 
 ## Quick Reference
 
-- **Frontend:** `QuizSection.tsx` → `fetch('/api/submit-lead', { method: 'POST', body: JSON.stringify({ name, email, phone, painPoint, experience, peptideWillingness, investment }) })`.
-- **Backend:** `app/api/submit-lead/route.ts` → `fetch(process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: same JSON })`.
+- **Frontend:** `QuizSection.tsx` → validates phone with `libphonenumber-js`, sends `phone` (E.164) and `phoneCountryCode` → `fetch('/api/submit-lead', { method: 'POST', body: JSON.stringify({ name, email, phone, phoneCountryCode, painPoint, experience, peptideWillingness, investment }) })`.
+- **Backend:** `app/api/submit-lead/route.ts` → validates phone again, normalizes to E.164 and ensures `phoneCountryCode` → `fetch(process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: same JSON })`.
 - **Google:** Apps Script `doPost(e)` → `JSON.parse(e.postData.contents)` → `sheet.appendRow([...])`.
-- **Sheet:** Row 1 = headers (name, email, phone number, pain point, experience, peptide willingness, investment); new rows appended below.
+- **Sheet:** Row 1 = headers (name, email, phone number, phone country code, pain point, experience, peptide willingness, investment); new rows appended below.
+- **Phone validation:** Real numbers only; country code required (e.g. +1, +44). Invalid submissions get 400 from the API and an inline error in the quiz form.
 
 This is the full chain that makes the “Google Sheet script submission” connection work in this project.

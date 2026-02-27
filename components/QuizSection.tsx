@@ -1,6 +1,36 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useMemo } from "react";
+import {
+  parsePhoneNumberFromString,
+  isValidPhoneNumber,
+  getCountries,
+  getCountryCallingCode,
+  type CountryCode,
+} from "libphonenumber-js";
+
+function getFlagEmoji(countryCode: string): string {
+  return [...countryCode]
+    .map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0)))
+    .join("");
+}
+
+function getCountryOptions(): { code: CountryCode; label: string; callingCode: string; flag: string }[] {
+  const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+  const countries = getCountries();
+  return countries
+    .map((code) => ({
+      code,
+      label: regionNames.of(code) || code,
+      callingCode: getCountryCallingCode(code),
+      flag: getFlagEmoji(code),
+    }))
+    .sort((a, b) => {
+      if (a.code === "US") return -1;
+      if (b.code === "US") return 1;
+      return a.label.localeCompare(b.label);
+    });
+}
 
 interface QuizSectionProps {
   onComplete: (data: {
@@ -26,8 +56,11 @@ export default function QuizSection({ onComplete, onBookCallClick }: QuizSection
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
+    phoneCountry: "US" as CountryCode,
+    phoneNational: "",
   });
+  const [phoneError, setPhoneError] = useState<string>("");
+  const countryOptions = useMemo(() => getCountryOptions(), []);
 
   const protocols = [
     {
@@ -108,22 +141,36 @@ export default function QuizSection({ onComplete, onBookCallClick }: QuizSection
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (formData.fullName && formData.email && formData.phone) {
-      setIsSubmitting(true);
-      
-      // Submit to Google Sheets via our API route (which proxies to Apps Script)
-      try {
-        const painPoint = protocolPainPoints[selectedProtocol] || selectedProtocol || '';
-        
-        const payload = {
-          name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          painPoint: painPoint,
-          experience: peptideExperience || '',
-          peptideWillingness: peptideWillingness || '',
-          investment: healthInvestment || '',
-        };
+    setPhoneError("");
+
+    if (!formData.fullName || !formData.email || !formData.phoneNational.trim()) return;
+
+    const rawFull = `+${getCountryCallingCode(formData.phoneCountry)}${formData.phoneNational.replace(/\D/g, "")}`;
+    const phoneNumber = parsePhoneNumberFromString(rawFull, formData.phoneCountry);
+    if (!phoneNumber || !isValidPhoneNumber(rawFull)) {
+      setPhoneError("Please enter a valid phone number");
+      return;
+    }
+
+    const phoneE164 = phoneNumber.format("E.164");
+    const phoneCountryCode = `+${phoneNumber.countryCallingCode}`;
+
+    setIsSubmitting(true);
+
+    // Submit to Google Sheets via our API route (which proxies to Apps Script)
+    try {
+      const painPoint = protocolPainPoints[selectedProtocol] || selectedProtocol || "";
+
+      const payload = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: phoneE164,
+        phoneCountryCode,
+        painPoint: painPoint,
+        experience: peptideExperience || "",
+        peptideWillingness: peptideWillingness || "",
+        investment: healthInvestment || "",
+      };
 
         console.log('Submitting to Google Sheets:', payload);
 
@@ -150,10 +197,11 @@ export default function QuizSection({ onComplete, onBookCallClick }: QuizSection
         onComplete({
           protocol: selectedProtocol,
           qualification: `${peptideExperience} | ${peptideWillingness} | ${healthInvestment}`,
-          ...formData,
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: phoneE164,
         });
       }
-    }
   };
 
   return (
@@ -386,23 +434,53 @@ export default function QuizSection({ onComplete, onBookCallClick }: QuizSection
 
               <div>
                 <label
-                  htmlFor="phone"
+                  htmlFor="phone-national"
                   className="block text-sm sm:text-base text-gray-300 mb-2"
                 >
                   Phone Number
                 </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  required
-                  disabled={isSubmitting}
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-3.5 sm:py-3 bg-black border-2 border-gray-800 rounded-sm text-white text-base focus:outline-none focus:border-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                  placeholder="Enter your phone number"
-                />
+                <div className="flex gap-2">
+                  <select
+                    id="phone-country"
+                    aria-label="Country code"
+                    disabled={isSubmitting}
+                    value={formData.phoneCountry}
+                    onChange={(e) => {
+                      setFormData({ ...formData, phoneCountry: e.target.value as CountryCode });
+                      if (phoneError) setPhoneError("");
+                    }}
+                    className="flex-shrink-0 w-[120px] sm:w-[140px] px-3 py-3.5 sm:py-3 bg-black border-2 border-gray-800 rounded-sm text-white text-base focus:outline-none focus:border-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation appearance-none cursor-pointer"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: "right 0.5rem center", backgroundRepeat: "no-repeat", backgroundSize: "1.5em 1.5em", paddingRight: "2rem" }}
+                  >
+                    {countryOptions.map((opt) => (
+                      <option key={opt.code} value={opt.code}>
+                        {opt.flag} +{opt.callingCode}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    id="phone-national"
+                    required
+                    disabled={isSubmitting}
+                    value={formData.phoneNational}
+                    onChange={(e) => {
+                      setFormData({ ...formData, phoneNational: e.target.value });
+                      if (phoneError) setPhoneError("");
+                    }}
+                    className={`flex-1 min-w-0 px-4 py-3.5 sm:py-3 bg-black border-2 rounded-sm text-white text-base focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation ${
+                      phoneError ? "border-red-500 focus:border-red-400" : "border-gray-800 focus:border-gray-600"
+                    }`}
+                    placeholder="555 123 4567"
+                    aria-invalid={!!phoneError}
+                    aria-describedby={phoneError ? "phone-error" : undefined}
+                  />
+                </div>
+                {phoneError && (
+                  <p id="phone-error" className="mt-1.5 text-sm text-red-400" role="alert">
+                    {phoneError}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">

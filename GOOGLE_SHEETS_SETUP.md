@@ -11,6 +11,7 @@ This guide will help you set up the Google Sheets integration using Google Apps 
    - name
    - email
    - phone number
+   - phone country code
    - pain point
    - experience
    - peptide willingness
@@ -44,6 +45,7 @@ function doPost(e) {
       data.name || '',
       data.email || '',
       data.phone || '',
+      data.phoneCountryCode || '',
       data.painPoint || '',
       data.experience || '',
       data.peptideWillingness || '',
@@ -163,7 +165,7 @@ NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIP
    - Click on a failed execution to see the error details
 
 5. **Check the sheet structure:**
-   - Ensure column headers in row 1 match exactly: name, email, phone number, pain point, experience, peptide willingness, investment
+   - Ensure column headers in row 1 match exactly: name, email, phone number, phone country code, pain point, experience, peptide willingness, investment
    - Make sure the sheet isn't protected or read-only
 
 6. **Check browser console:**
@@ -203,7 +205,8 @@ The quiz data is automatically mapped to Google Sheets columns:
 
 - **name** → Full name from the form
 - **email** → Email address
-- **phone** → Phone number
+- **phone** → Phone number (E.164, e.g. +15551234567)
+- **phone country code** → Country calling code (e.g. +1, +44)
 - **painPoint** → Derived from selected protocol:
   - Muscle Growth → "Slow or stalled muscle growth"
   - Fat Loss → "Stubborn fat that won't budge"
