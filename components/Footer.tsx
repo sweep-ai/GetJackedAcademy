@@ -25,7 +25,7 @@ export default function Footer() {
             </p>
           </div>
           
-          <div className="flex flex-col md:flex-row gap-6 text-center md:text-left">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-10 text-center md:text-left">
             <div>
               <h3 className="text-gray-400 font-bold mb-2">Quick Links</h3>
               <ul className="space-y-1">
@@ -38,6 +38,21 @@ export default function Footer() {
                   <a href="#book-call-section" className="text-gray-500 hover:text-gray-300 transition-colors text-sm">
                     Book a Call
                   </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-gray-400 font-bold mb-2">Legal</h3>
+              <ul className="space-y-1">
+                <li>
+                  <Link href="/privacy-policy" className="text-gray-500 hover:text-gray-300 transition-colors text-sm">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms-of-service" className="text-gray-500 hover:text-gray-300 transition-colors text-sm">
+                    Terms of Service
+                  </Link>
                 </li>
               </ul>
             </div>
